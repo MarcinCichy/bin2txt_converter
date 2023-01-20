@@ -11,60 +11,71 @@ class Application(Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        frm_txtField_Frame1 = Frame(self)  # , bg = 'blue'
-        frm_txtField_Frame1.grid(row=0, column=0,  ipadx=5, ipady=5, sticky=NW)
-        frm_txtField_Frame2 = Frame(self)  # , bg = 'blue'
-        frm_txtField_Frame2.grid(row=1, column=0, ipadx=5, ipady=5, sticky=NW)
-        frm_RadioButtons_Frame = Frame(self)  # , bg = 'red'
-        frm_RadioButtons_Frame.grid(row=0, column=1, ipadx=5, ipady=5, sticky=NW)
-        frm_Buttons_Frame = Frame(self)  # , bg = 'green'
-        frm_Buttons_Frame.grid(row=1, column=1, ipadx=5, ipady=5, sticky=NW)
-        
-        self.txt_enterField_1 = Text(frm_txtField_Frame1, width=60, height=10)  # ,width = 100, height = 100
-        self.txt_enterField_1.grid(row=1, column=0, padx=2, pady=10, sticky=NE)
-        self.txt_enterField_2 = Text(frm_txtField_Frame2, width=60, height=10)  # ,width = 100, height = 100
-        self.txt_enterField_2.grid(row=2, column=0, padx=2, pady=10, sticky=NE)
-
-        # # utwórz ramkę, która okala pola tekstowe i je grupuje
-        # labelframe = LabelFrame(frm_RadioButtons_Frame, text='Conversion type')
-        # labelframe.grid(row=0, column=1, padx=5, pady=2, sticky=NW)
-       
-       
-        # utwórz ramkę, która okala przyciski wyboru i je grupuje
-        labelframe = LabelFrame(frm_RadioButtons_Frame, text='Conversion type')
-        labelframe.grid(row=0, column=1, padx=5, pady=2, sticky=NW)
-
-        # utwórz zmienną, która ma reprezentowac typ konversji
+        # create variable to represents direction of conversion
         self.convert_direction = StringVar()
         self.convert_direction.set('bin2txt')
 
-        # utwórz przycisk wyboru (radio button)
-        Radiobutton(labelframe, text='bin to txt', variable=self.convert_direction, value='bin2txt', command=None).grid(row=0, column=0, padx=2, pady=2, sticky=W)
-        Radiobutton(labelframe, text='txt to bin', variable=self.convert_direction, value='txt2bin', command=None).grid(row=1, column=0, padx=2, pady=2, sticky=W)
+        frm_txtField_Frame1 = Frame(self)  # , bg = 'blue'
+        frm_txtField_Frame1.grid(row=0, column=0, ipadx=5, ipady=5, sticky=N)
+        frm_txtField_Frame2 = Frame(self)  # , bg = 'blue'
+        frm_txtField_Frame2.grid(row=1, column=0, ipadx=5, ipady=5, sticky=N)
+        frm_RadioButtons_Frame = Frame(self)  # , bg = 'red'
+        frm_RadioButtons_Frame.grid(row=0, column=1, ipadx=5, ipady=5, sticky=N)
+        frm_Buttons_Frame = Frame(self)  # , bg = 'green'
+        frm_Buttons_Frame.grid(row=1, column=1, ipadx=5, ipady=5, sticky=N)
 
-        # utwórz przycisk do otwierania i wyboru katalgów
+        # create frames that surround and group text boxes
+        labelframe_first_txt = LabelFrame(frm_txtField_Frame1, text='Enter text:')
+        labelframe_first_txt.grid(row=0, column=0, padx=5, pady=5, sticky=N)
+        labelframe_second_txt = LabelFrame(frm_txtField_Frame2, text='Converted text:')
+        labelframe_second_txt.grid(row=1, column=0, padx=5, pady=5, sticky=N)
+
+        # create a frame that surrounds and groups the radio buttons
+        labelframe_buttons = LabelFrame(frm_RadioButtons_Frame, text='Conversion type')
+        labelframe_buttons.grid(row=0, column=1, padx=5, pady=2, sticky=NW)
+
+        # create text boxes
+        self.txt_enterField_1 = Text(labelframe_first_txt , width=60, height=10)  # ,width = 100, height = 100
+        self.txt_enterField_1.grid(row=1, column=0, padx=10, pady=10, sticky=N)
+        self.txt_enterField_2 = Text(labelframe_second_txt, width=60, height=10)  # ,width = 100, height = 100
+        self.txt_enterField_2.grid(row=2, column=0, padx=10, pady=10, sticky=N)
+
+        # create radio buttons
+        Radiobutton(labelframe_buttons, text='bin to txt', variable=self.convert_direction, value='bin2txt', command=None).grid(
+            row=0, column=0, padx=2, pady=2, sticky=W)
+        Radiobutton(labelframe_buttons, text='txt to bin', variable=self.convert_direction, value='txt2bin', command=None).grid(
+            row=1, column=0, padx=2, pady=2, sticky=W)
+
+        # create buttons that support conversion
         self.btn_Convert = Button(frm_Buttons_Frame)
         self.btn_Convert['text'] = 'Convert'
         self.btn_Convert['command'] = self.convert
         self.btn_Convert.grid(row=0, column=0, padx=5, pady=5, sticky=SW)
         self.btn_Flip = Button(frm_Buttons_Frame)
-        self.btn_Flip['text'] = 'Flip'
+        self.btn_Flip['text'] = 'Flip text'
         self.btn_Flip['command'] = self.flip
         self.btn_Flip.grid(row=1, column=0, padx=5, pady=10, sticky=SW)
-        
+
         # scrollbar = Scrollbar(orient='vertical', command=self.txt_ListOfFiles.yview)
         # scrollbar.grid(row=1, column=2, sticky='NS')
         # self.txt_enterField.config(yscrollcommand=scrollbar.set)
-        
+
     def convert(self):
+        convert_type = self.convert_direction.get()
+        first_txt_field_content = self.txt_enterField_1.get("1.0" , "end")
+        print(convert_type)
+        print(first_txt_field_content)
+
+    def flip(self, first_txt_field_content=None):
+        first_txt_field_content = self.txt_enterField_1.get("1.0", "end")
+        # self.txt_enterField_2.DE("1.0", first_txt_field_content)
+        self.txt_enterField_2.insert("1.0", first_txt_field_content )
         pass
-    
-    def flip(self):
-        pass
-        
-        
+
+
 root = Tk()
-root.title('bin2txt Converter')
-root.geometry('610x380')
+root.title('txt2bin2txt Converter')
+root.geometry('650x450')
+root.resizable(False, False)
 app = Application(root)
 root.mainloop()

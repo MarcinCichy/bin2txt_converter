@@ -1,5 +1,5 @@
 from tkinter import *
-
+from bin2txt_conv import *
 
 class Application(Frame):
     def __init__(self, master):
@@ -41,10 +41,8 @@ class Application(Frame):
         self.txt_enterField_2.grid(row=2, column=0, padx=10, pady=10, sticky=N)
 
         # create radio buttons
-        Radiobutton(labelframe_buttons, text='bin to txt', variable=self.convert_direction, value='bin2txt', command=None).grid(
-            row=0, column=0, padx=2, pady=2, sticky=W)
-        Radiobutton(labelframe_buttons, text='txt to bin', variable=self.convert_direction, value='txt2bin', command=None).grid(
-            row=1, column=0, padx=2, pady=2, sticky=W)
+        Radiobutton(labelframe_buttons, text='bin to txt', variable=self.convert_direction, value='bin2txt', command=None).grid(row=0, column=0, padx=2, pady=2, sticky=W)
+        Radiobutton(labelframe_buttons, text='txt to bin', variable=self.convert_direction, value='txt2bin', command=None).grid(row=1, column=0, padx=2, pady=2, sticky=W)
 
         # create buttons that support conversion
         self.btn_Convert = Button(frm_Buttons_Frame)
@@ -52,25 +50,24 @@ class Application(Frame):
         self.btn_Convert['command'] = self.convert
         self.btn_Convert.grid(row=0, column=0, padx=5, pady=5, sticky=SW)
         self.btn_Flip = Button(frm_Buttons_Frame)
-        self.btn_Flip['text'] = 'Flip text'
-        self.btn_Flip['command'] = self.flip
+        self.btn_Flip['text'] = 'Clear'
+        self.btn_Flip['command'] = self.clear
         self.btn_Flip.grid(row=1, column=0, padx=5, pady=10, sticky=SW)
-
-        # scrollbar = Scrollbar(orient='vertical', command=self.txt_ListOfFiles.yview)
-        # scrollbar.grid(row=1, column=2, sticky='NS')
-        # self.txt_enterField.config(yscrollcommand=scrollbar.set)
 
     def convert(self):
         convert_type = self.convert_direction.get()
-        first_txt_field_content = self.txt_enterField_1.get("1.0" , "end")
-        print(convert_type)
-        print(first_txt_field_content)
+        if convert_type == 'bin2txt':
+            first_txt_field_content = self.txt_enterField_1.get("1.0", "end")
+            conversion = bin2txt(first_txt_field_content.rstrip())
+            self.txt_enterField_2.insert(END, conversion)
+        else:
+            first_txt_field_content = self.txt_enterField_1.get("1.0", "end")
+            conversion = txt2bin(first_txt_field_content.rstrip())
+            self.txt_enterField_2.insert(END, conversion)
 
-    def flip(self, first_txt_field_content=None):
-        first_txt_field_content = self.txt_enterField_1.get("1.0", "end")
-        # self.txt_enterField_2.DE("1.0", first_txt_field_content)
-        self.txt_enterField_2.insert("1.0", first_txt_field_content )
-        pass
+    def clear(self, first_txt_field_content=None):
+        self.txt_enterField_1.delete("1.0", "end")
+        self.txt_enterField_2.delete("1.0", "end")
 
 
 root = Tk()

@@ -33,5 +33,5 @@ def txt2bin(sentence):
         ascii_list.append(ord(letter))
 
     for i in range(0, len(ascii_list)):
-        binary.append(bin(ascii_list[i]).replace("0b",""))
+        binary.append(bin(ascii_list[i]).replace("b", ""))
     return binary

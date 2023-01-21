@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import messagebox
 from bin2txt_conv import *
 
-global data
 
 class Application(Frame):
     def __init__(self, master):
@@ -56,37 +55,6 @@ class Application(Frame):
         self.btn_Flip['text'] = 'Clear'
         self.btn_Flip['command'] = self.clear
         self.btn_Flip.grid(row=1, column=0, padx=5, pady=10, sticky=SW)
-# # ------------------------------------------------------------------------------------------------------------------
-#         def copy():
-#             global data
-#             if self.txt_enterField_1.get():
-#                 data = self.txt_enterField_1.get()  # copy selected text to clipboard
-#
-#
-#         def paste():
-#             global data
-#             self.txt_enterField_2.insert(END, data)  # Paste data from clipboard
-#
-#         # Add Menu
-#         popup = Menu(root, tearoff=0)
-#
-#         # Adding Menu Items
-#         popup.add_command(label="Copy", command=copy)
-#         popup.add_command(label="Paste", command=paste)
-#
-#
-#
-#         def menu_popup(event):
-#             # display the popup menu
-#             try:
-#                 popup.tk_popup(event.x_root, event.y_root, 0)
-#             finally:
-#                 # Release the grab
-#                 popup.grab_release()
-#
-#         root.bind("<Button-3>", menu_popup)
-#
-# # ------------------------------------------------------------------------------------------------------------------
 
     def convert(self):
         convert_type = self.convert_direction.get()

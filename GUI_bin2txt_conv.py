@@ -55,7 +55,23 @@ class Application(Frame):
         self.btn_Flip['text'] = 'Clear'
         self.btn_Flip['command'] = self.clear
         self.btn_Flip.grid(row=1, column=0, padx=5, pady=10, sticky=SW)
+# ---------------------------------------------------------------------------------------------
+        # create context menu under right mouse button
+        m = Menu(root, tearoff=0)
+        # m.add_command(label="Cut", command=self.cut_selected)
+        m.add_command(label="Copy", command=self.copy_selected)
+        m.add_command(label="Paste", command=self.paste_selected)
 
+        def do_popup(event):
+            try:
+                m.tk_popup(event.x_root, event.y_root)
+            finally:
+                m.grab_release()
+
+        self.txt_enterField_1.bind("<Button-3>", do_popup)
+        self.txt_enterField_2.bind("<Button-3>", do_popup)
+
+# ---------------------------------------------------------------------------------------------
     def convert(self):
         convert_type = self.convert_direction.get()
         if convert_type == 'bin2txt':
@@ -76,6 +92,30 @@ class Application(Frame):
     def clear(self):
         self.txt_enterField_1.delete("1.0", "end")
         self.txt_enterField_2.delete("1.0", "end")
+
+# ---------------------------------------------------------------------------------------------
+
+    global field1_data
+    global field2_data
+
+    def copy_selected(self):
+        global field1_data
+        global field2_data
+        if self.txt_enterField_1:
+            field1_data = self.txt_enterField_1.selection_get()
+        elif self.txt_enterField_2:
+            field2_data = self.txt_enterField_2.selection_get()
+
+    # def cut_selected(self):
+    #     self.txt_enterField_1.selection_get()
+    #     self.txt_enterField_1.delete("1.0", "end")
+    #     self.txt_enterField_2.selection_get()
+    #     self.txt_enterField_2.delete("1.0", "end")
+
+    def paste_selected(self):
+        clipboard_data = root.clipboard_get()
+        self.txt_enterField_1.insert(END, clipboard_data)
+        self.txt_enterField_2.insert(END, clipboard_data)
 
 
 root = Tk()

@@ -37,7 +37,7 @@ class Application(Frame):
         labelframe_buttons.grid(row=0, column=1, padx=5, pady=2, sticky=NW)
 
         # create text boxes
-        self.txt_enterField_1 = Text(labelframe_first_txt , width=60, height=10)  # ,width = 100, height = 100
+        self.txt_enterField_1 = Text(labelframe_first_txt, width=60, height=10)  # ,width = 100, height = 100
         self.txt_enterField_1.grid(row=1, column=0, padx=10, pady=10, sticky=N)
         self.txt_enterField_2 = Text(labelframe_second_txt, width=60, height=10)  # ,width = 100, height = 100
         self.txt_enterField_2.grid(row=2, column=0, padx=10, pady=10, sticky=N)
@@ -56,10 +56,10 @@ class Application(Frame):
         self.btn_Flip['command'] = self.clear
         self.btn_Flip.grid(row=1, column=0, padx=5, pady=10, sticky=SW)
 # ---------------------------------------------------------------------------------------------
-        # create context menu under right mouse button
+        # create a right-click context menu
         m = Menu(root, tearoff=0)
-        # m.add_command(label="Cut", command=self.cut_selected)
         m.add_command(label="Copy", command=self.copy_selected)
+        m.add_command(label="Cut", command=self.cut_selected)
         m.add_command(label="Paste", command=self.paste_selected)
 
         def do_popup(event):
@@ -94,29 +94,32 @@ class Application(Frame):
         self.txt_enterField_2.delete("1.0", "end")
 
 # ---------------------------------------------------------------------------------------------
-
-    global field1_data
-    global field2_data
-
     def copy_selected(self):
-        global field1_data
-        global field2_data
-        if self.txt_enterField_1:
-            field1_data = self.txt_enterField_1.selection_get()
-        elif self.txt_enterField_2:
-            field2_data = self.txt_enterField_2.selection_get()
+        root.clipboard_clear()
+        data = root.selection_get()
+        root.clipboard_append(data)
 
-    # def cut_selected(self):
-    #     self.txt_enterField_1.selection_get()
-    #     self.txt_enterField_1.delete("1.0", "end")
-    #     self.txt_enterField_2.selection_get()
-    #     self.txt_enterField_2.delete("1.0", "end")
-
+    def cut_selected(self):
+        entries_list = []
+        self.copy_selected()
+        #if self.txt_enterField_1.selection_get():
+        entries_list.append(self.txt_enterField_1)
+            # if self.txt_enterField_1 in entries_list:
+        self.txt_enterField_1.delete('sel.first', 'sel.last')
+        entries_list.remove(self.txt_enterField_1)
+        #elif self.txt_enterField_2.selection_get():
+        entries_list.append(self.txt_enterField_2)
+            # if self.txt_enterField_2 in entries_list:
+        self.txt_enterField_2.delete('sel.first', 'sel.last')
+        entries_list.remove(self.txt_enterField_2)
     def paste_selected(self):
         clipboard_data = root.clipboard_get()
+        # if self.txt_enterField_1.bind('<Enter>'):
+        #     print("enter")
+            # self.txt_enterField_2:
+        #     print('f2')
         self.txt_enterField_1.insert(END, clipboard_data)
         self.txt_enterField_2.insert(END, clipboard_data)
-
 
 root = Tk()
 root.title('txt2bin2txt Converter')

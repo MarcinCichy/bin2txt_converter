@@ -4,13 +4,16 @@ from bin2txt_conv import *
 
 
 class Application(Frame):
-    def __init__(self, master):
-        super(Application, self).__init__(master)
-        self.btn_Flip = None
+    def __init__(self, root):
+        super(Application, self).__init__(root)
+        self.root = root
+        self.btn_Clear = None
         self.btn_Convert = None
         self.convert_direction = None
         self.grid()
         self.create_widgets()
+        self.show_context_menu(self.txt_enterField_1)
+        self.show_context_menu(self.txt_enterField_2)
 
     def create_widgets(self):
         # create variable to represents direction of conversion
@@ -51,26 +54,20 @@ class Application(Frame):
         self.btn_Convert['text'] = 'Convert'
         self.btn_Convert['command'] = self.convert
         self.btn_Convert.grid(row=0, column=0, padx=5, pady=5, sticky=SW)
-        self.btn_Flip = Button(frm_Buttons_Frame)
-        self.btn_Flip['text'] = 'Clear'
-        self.btn_Flip['command'] = self.clear
-        self.btn_Flip.grid(row=1, column=0, padx=5, pady=10, sticky=SW)
+        self.btn_Clear = Button(frm_Buttons_Frame)
+        self.btn_Clear['text'] = 'Clear'
+        self.btn_Clear['command'] = self.clear
+        self.btn_Clear.grid(row=1, column=0, padx=5, pady=10, sticky=SW)
 # ---------------------------------------------------------------------------------------------
-        # create a right-click context menu
-        m = Menu(root, tearoff=0)
-        m.add_command(label="Copy", command=self.copy_selected)
-        m.add_command(label="Cut", command=self.cut_selected)
-        m.add_command(label="Paste", command=self.paste_selected)
+    # create a right-click context menu
+    # text_widget.bind("<Button-3>", lambda event: context_menu.post(event.x_root, event.y_root))
 
-        def do_popup(event):
-            try:
-                m.tk_popup(event.x_root, event.y_root)
-            finally:
-                m.grab_release()
-
-        self.txt_enterField_1.bind("<Button-3>", do_popup)
-        self.txt_enterField_2.bind("<Button-3>", do_popup)
-
+    def show_context_menu(self, text_widget):
+        menu = Menu(text_widget, tearoff=0)
+        menu.add_command(label="Copy", command=lambda: self.copy_selected(text_widget))
+        menu.add_command(label="Cut", command=lambda: self.cut_selected(text_widget))
+        menu.add_command(label="Paste", command=lambda: self.paste_selected(text_widget))
+        text_widget.bind("<Button-3>", lambda event: menu.post(event.x_root, event.y_root))
 # ---------------------------------------------------------------------------------------------
     def convert(self):
         convert_type = self.convert_direction.get()
@@ -94,32 +91,19 @@ class Application(Frame):
         self.txt_enterField_2.delete("1.0", "end")
 
 # ---------------------------------------------------------------------------------------------
-    def copy_selected(self):
-        root.clipboard_clear()
-        data = root.selection_get()
-        root.clipboard_append(data)
+    def copy_selected(self, text_widget):
+        text_widget.clipboard_clear()
+        text = text_widget.get("sel.first", "sel.last")
+        text_widget.clipboard_append(text)
 
-    def cut_selected(self):
-        entries_list = []
-        self.copy_selected()
-        #if self.txt_enterField_1.selection_get():
-        entries_list.append(self.txt_enterField_1)
-            # if self.txt_enterField_1 in entries_list:
-        self.txt_enterField_1.delete('sel.first', 'sel.last')
-        entries_list.remove(self.txt_enterField_1)
-        #elif self.txt_enterField_2.selection_get():
-        entries_list.append(self.txt_enterField_2)
-            # if self.txt_enterField_2 in entries_list:
-        self.txt_enterField_2.delete('sel.first', 'sel.last')
-        entries_list.remove(self.txt_enterField_2)
-    def paste_selected(self):
-        clipboard_data = root.clipboard_get()
-        # if self.txt_enterField_1.bind('<Enter>'):
-        #     print("enter")
-            # self.txt_enterField_2:
-        #     print('f2')
-        self.txt_enterField_1.insert(END, clipboard_data)
-        self.txt_enterField_2.insert(END, clipboard_data)
+    def cut_selected(self, text_widget):
+        self.copy_selected(text_widget)
+        text_widget.delete("sel.first", "sel.last")
+
+    def paste_selected(self, text_widget):
+        text = self.root.clipboard_get()
+        text_widget.insert("insert", text)
+
 
 root = Tk()
 root.title('txt2bin2txt Converter')
@@ -127,4 +111,3 @@ root.geometry('650x450')
 root.resizable(False, False)
 app = Application(root)
 root.mainloop()
-
